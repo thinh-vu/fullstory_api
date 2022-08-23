@@ -11,5 +11,5 @@ from .fullstory_api import (
     fs_segment_export,
     fs_schedule_segment_export,
     fs_operation_status,
-    fs_export_result,
+    fs_export_result
 )

@@ -2,7 +2,7 @@
 # See LICENSE for details.
 
 __author__ = "Thinh Vu @thinh-vu in GitHub"
-__version__ = "0.0.1"
+__version__ = "0.0.4"
 
 from .fullstory_api import (
     fs_export,

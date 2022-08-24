@@ -4,16 +4,18 @@
 import pandas as pd
 import requests
 from pandas import json_normalize
+import json
+import time
+import inspect #to show docstring
 
 # from datetime import datetime
 # from datetime import timedelta
-# import time
 # import yaml
 
 
 # DATA EXPORT
 
-def fs_export(user_id, report_type, token_key): #userEvents, userPages
+def fs_user_export(user_id, report_type, token_key): #userEvents, userPages
     """
     Export events or pages of historical data of a specific user by the userId. Reference [here](https://developer.fullstory.com/get-data-export)
     Args:
@@ -74,6 +76,7 @@ def fs_segment_export(segment_id, report_type, start_date, end_date, token_key):
         token_key (:obj:`str`, required): Fullstory API key (can be an API key from any roles)
     """
     operationId = fs_schedule_segment_export(segment_id, report_type, "FORMAT_CSV", start_date, end_date, token_key)['operationId']
+    time.sleep(3)
     searchExportId = fs_operation_status(operationId, token_key)['results']['searchExportId']
     export_url = fs_export_result(searchExportId, token_key)['location']
     df = pd.read_csv(export_url, compression='gzip')
@@ -83,7 +86,7 @@ def fs_segment_export(segment_id, report_type, start_date, end_date, token_key):
 
 def fs_schedule_segment_export(segment_id, report_type, report_format, start_date, end_date, token_key):
     """
-    Schedules an export based on the provided segment and return the operationId. Reference [here](https://developer.fullstory.com/create-segment-export)
+    Schedules an export based on the provided segment and returns the operationId. Reference [here](https://developer.fullstory.com/create-segment-export)
     The progress and results of the export can be fetched from the operations API
     Args:
         segment_id (:obj:`str`, required): The ID of a specific segment on Fullstory. It should look like this "ofHlcGlbWdwX"
@@ -99,8 +102,8 @@ def fs_schedule_segment_export(segment_id, report_type, report_format, start_dat
         "type": "{}".format(report_type),
         "format": "{}".format(report_format),
         "timeRange": {
-        "start": "{}".format(start_date),
-        "end": "{}".format(end_date)
+            "start": "{}".format(start_date),
+            "end": "{}".format(end_date)
         }
     })
     headers = {
@@ -114,7 +117,7 @@ def fs_schedule_segment_export(segment_id, report_type, report_format, start_dat
 
 def fs_operation_status(operationId, token_key):
     """
-    Get details about a specific operation. Return a "searchExportId" which can be use to retrieve the export result. Reference [here](https://developer.fullstory.com/get-operation)
+    Get details about a specific operation. Return a "searchExportId" which can be used to retrieve the export result. Reference [here](https://developer.fullstory.com/get-operation)
     Args:
         operationId (:obj:`str`, required): The ID of a specific operation on Fullstory. It can be retrieved from the segment_export function.
         token_key (:obj:`str`, required): Fullstory API key (can be an API key from any roles)
@@ -131,7 +134,7 @@ def fs_operation_status(operationId, token_key):
 ## Get Export result
 def fs_export_result(searchExportId, token_key):
     """
-    Gets the results for a scheduled export. Return a link which can be use to retrieve the exported csv gzip file. Reference [here](https://developer.fullstory.com/get-export-results)
+    Gets the results for a scheduled export. Return a link that can be used to retrieve the exported CSV gzip file. Reference [here](https://developer.fullstory.com/get-export-results)
     Args:
         searchExportId (:obj:`str`, required): The ID of a specific operation on Fullstory. It can be retrieved from the segment_export function.
         token_key (:obj:`str`, required): Fullstory API key (can be an API key from any roles)
@@ -145,3 +148,7 @@ def fs_export_result(searchExportId, token_key):
     response = requests.request("GET", url, headers=headers, data=payload)
     return response.json()
 
+# DOCSTRING HELPER
+def fs_help(function_name):
+    """Show any function's docstring. Ex: help_doc('fs_export_result')."""
+    print(inspect.getdoc())

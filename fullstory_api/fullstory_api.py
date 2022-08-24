@@ -150,5 +150,9 @@ def fs_export_result(searchExportId, token_key):
 
 # DOCSTRING HELPER
 def fs_help(function_name):
-    """Show any function's docstring. Ex: help_doc('fs_export_result')."""
+    """
+    Show any function's docstring. Ex: help_doc('fs_export_result').
+    Args:
+        function_name (:obj:`str`, required): Name of the target function
+    """
     print(inspect.getdoc())

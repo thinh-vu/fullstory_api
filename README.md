@@ -46,5 +46,10 @@ The progress and results of the export can be fetched from the operations API
 
 # III. Quick tips
 - Use the command dir(fullstory_api) To list down all of the available functions of this module in the Python IDE.
-- Using pre-built function `fs_help('function_name')` to print the docstring helper of that function. For instance, you can type the command to the terminal with `fs_help('fs_export_result').`
+- Using pre-built function `fs_help(function_name)` to print the docstring helper of that function. For instance, you can type the command to the terminal with `fs_help(fs_export_result).`
 
+# IV. 🙋‍♂️ Contact Information
+You can contact me at one of my social network profiles:
+
+- 💼 LinkedIn: https://linkedin.com/in/thinh-vu
+- :octocat: GitHub: https://github.com/thinh-vu

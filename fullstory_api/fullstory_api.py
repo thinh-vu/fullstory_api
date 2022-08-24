@@ -155,4 +155,4 @@ def fs_help(function_name):
     Args:
         function_name (:obj:`str`, required): Name of the target function
     """
-    print(inspect.getdoc())
+    print(inspect.getdoc(function_name))

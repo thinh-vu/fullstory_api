@@ -47,6 +47,7 @@ The progress and results of the export can be fetched from the operations API
 # III. Quick tips
 - Use the command dir(fullstory_api) To list down all of the available functions of this module in the Python IDE.
 - Using pre-built function `fs_help(function_name)` to print the docstring helper of that function. For instance, you can type the command to the terminal with `fs_help(fs_export_result).`
+- Using the command `from fullstory_api import *` to import all functions in this module to the Python Interpreter.
 
 # IV. 🙋‍♂️ Contact Information
 You can contact me at one of my social network profiles:

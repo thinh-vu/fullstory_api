@@ -76,7 +76,7 @@ def fs_segment_export(segment_id, report_type, start_date, end_date, token_key):
         token_key (:obj:`str`, required): Fullstory API key (can be an API key from any roles)
     """
     operationId = fs_schedule_segment_export(segment_id, report_type, "FORMAT_CSV", start_date, end_date, token_key)['operationId']
-    time.sleep(3)
+    time.sleep(20)
     searchExportId = fs_operation_status(operationId, token_key)['results']['searchExportId']
     export_url = fs_export_result(searchExportId, token_key)['location']
     df = pd.read_csv(export_url, compression='gzip')

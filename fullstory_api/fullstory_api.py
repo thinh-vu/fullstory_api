@@ -73,6 +73,7 @@ def fs_segment_export(segment_id, report_type, start_date, end_date, token_key, 
         start_date (:obj:`str`, required): use this datetime format "2022-01-01T00:00:00Z"
         start_date (:obj:`str`, required): use this datetime format "2022-08-22T23:59:59Z"
         token_key (:obj:`str`, required): Fullstory API key (can be an API key from any roles)
+        delay (:obj:`int`, optional): Time to delay in seconds. When the export data is big, you can increase the delay time, let's say 120.
     """
     operationId = fs_schedule_segment_export(segment_id, report_type, start_date, end_date, token_key, report_format='FORMAT_CSV')['operationId']
     time.sleep(delay)
@@ -159,3 +160,12 @@ def fs_export_result(searchExportId, token_key):
     }
     response = requests.request("GET", url, headers=headers, data=payload)
     return response.json()
+
+# DOCSTRING HELPER
+def fs_help(function_name):
+    """
+    Show any function's docstring. Ex: help_doc('fs_export_result').
+    Args:
+        function_name (:obj:`str`, required): Name of the target function
+    """
+    print(inspect.getdoc(function_name))

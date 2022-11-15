@@ -6,7 +6,6 @@ import requests
 from pandas import json_normalize
 import json
 import time
-import inspect #to show docstring
 
 # from datetime import datetime
 # from datetime import timedelta
@@ -65,7 +64,7 @@ def fs_list_segment(token_key):
     result = json_normalize(response['segments'])
     return result
 
-def fs_segment_export(segment_id, report_type, start_date, end_date, token_key):
+def fs_segment_export(segment_id, report_type, start_date, end_date, token_key, delay=5):
     """
     Return the segment export as a DataFrame.
     Args:
@@ -75,8 +74,21 @@ def fs_segment_export(segment_id, report_type, start_date, end_date, token_key):
         start_date (:obj:`str`, required): use this datetime format "2022-08-22T23:59:59Z"
         token_key (:obj:`str`, required): Fullstory API key (can be an API key from any roles)
     """
-    operationId = fs_schedule_segment_export(segment_id, report_type, "FORMAT_CSV", start_date, end_date, token_key)['operationId']
-    time.sleep(3)
+    operationId = fs_schedule_segment_export(segment_id, report_type, start_date, end_date, token_key, report_format='FORMAT_CSV')['operationId']
+    time.sleep(delay)
+    searchExportId = fs_operation_status(operationId, token_key)['results']['searchExportId']
+    export_url = fs_export_result(searchExportId, token_key)['location']
+    df = pd.read_csv(export_url, compression='gzip')
+    return df
+
+## Manually download the exported data
+
+def fs_download_export (operationId, token_key):
+    """
+    Download the export data with an operationId. Use this function to download the scheduled report manually
+    operationId (:obj:`str`, required): The ID has been returned from the `fs_schedule_segment_export` function.
+    token_key (:obj:`str`, required): Fullstory API key (can be an API key from any roles)
+    """
     searchExportId = fs_operation_status(operationId, token_key)['results']['searchExportId']
     export_url = fs_export_result(searchExportId, token_key)['location']
     df = pd.read_csv(export_url, compression='gzip')
@@ -84,7 +96,7 @@ def fs_segment_export(segment_id, report_type, start_date, end_date, token_key):
 
 ## Create Segment Export
 
-def fs_schedule_segment_export(segment_id, report_type, report_format, start_date, end_date, token_key):
+def fs_schedule_segment_export(segment_id, report_type, start_date, end_date, token_key, report_format='FORMAT_CSV'):
     """
     Schedules an export based on the provided segment and returns the operationId. Reference [here](https://developer.fullstory.com/create-segment-export)
     The progress and results of the export can be fetched from the operations API
@@ -147,12 +159,3 @@ def fs_export_result(searchExportId, token_key):
     }
     response = requests.request("GET", url, headers=headers, data=payload)
     return response.json()
-
-# DOCSTRING HELPER
-def fs_help(function_name):
-    """
-    Show any function's docstring. Ex: help_doc('fs_export_result').
-    Args:
-        function_name (:obj:`str`, required): Name of the target function
-    """
-    print(inspect.getdoc(function_name))
